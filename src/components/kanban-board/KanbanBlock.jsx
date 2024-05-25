@@ -1,21 +1,45 @@
 import React from "react";
+import { memo } from "react";
 
-const KanbanBlock = ({ status_items, setSelectedStatus, items }) => {
-  return status_items?.map((el) => (
-    <div key={el} className={`kanban__box ${el}`}>
+function KanbanBlog({ statusItems, items, setSelectStatus, setStatus }) {
+  const handleDelete = (id) => {
+    if (confirm("Malumotlar Ochirilsinmi")) {
+      setStatus((prev) => prev.filter((el) => el.id !== id));
+    }
+  };
+
+  return statusItems.map((statusItem) => (
+    <div key={statusItem.id} className={`kanban__box ${statusItem.title}`}>
       <div className="kanban__heading">
         <p>
-          {el} to start / {items(el).length}
+          {statusItem.title} / {items(statusItem.title).length}
         </p>
       </div>
       <div className="kanban__block">
-        {items(el).length ? items(el) : <p>Empty</p>}
+        {items(statusItem.title).length ? (
+          items(statusItem.title)
+        ) : (
+          <div>
+            <p className="kanban__block__empty">
+              Ma'lumotlar hali yaratilmagan
+            </p>
+            <button
+              onClick={() => handleDelete(statusItem.id)}
+              className="kanban__block__delete"
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
-      <button onClick={() => setSelectedStatus(el)} className="kanban__add_btn">
+      <button
+        onClick={() => setSelectStatus(statusItem.title)}
+        className="kanban__add_btn"
+      >
         Add item
       </button>
     </div>
   ));
-};
+}
 
-export default KanbanBlock;
+export default memo(KanbanBlog);
